@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertitore Universale Premium</title>
+    <style>
+        :root {
+            --bg-lunghezza: linear-gradient(135deg, #667eea, #764ba2);
+            --bg-peso: linear-gradient(135deg, #11998e, #38ef7d);
+            --bg-temperatura: linear-gradient(135deg, #f12711, #f5af19);
+            --bg-valuta: linear-gradient(135deg, #0575e6, #00f260);
+            --bg-informatica: linear-gradient(135deg, #141e30, #243b55);
+            --glass: rgba(255, 255, 255, 0.15);
+            --text: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-lunghezza);
+            transition: background 0.8s ease;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .converter-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 24px;
+            padding: 25px;
+            width: 100%;
+            max-width: 360px;
+            color: var(--text);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .select-custom {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 15px;
+            outline: none;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+        
+        .select-custom option {
+            background: #243b55;
+            color: #fff;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+
+        .field-container {
+            display: flex;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 5px 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+            align-items: center;
+        }
+
+        .field-container input {
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-size: 18px;
+            font-weight: 600;
+            width: 100%;
+            padding: 8px 5px;
+        }
+
+        .field-container select {
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: right;
+        }
+
+        .field-container select option {
+            background: #243b55;
+        }
+
+        .swap-btn {
+            display: block;
+            margin: 10px auto;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.3s;
+        }
+        .swap-btn:active { transform: scale(0.9) rotate(180deg); }
+
+        .loader {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+            vertical-align: middle;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .api-status {
+            font-size: 10px;
+            text-align: center;
+            opacity: 0.6;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="converter-card">
+        <h2>Convertitore Universale <span id="api-loader" class="loader"></span></h2>
+        
+        <select id="category-select" class="select-custom">
+            <option value="lunghezza">📏 Lunghezza</option>
+            <option value="peso">⚖️ Peso / Massa</option>
+            <option value="temperatura">🌡️ Temperatura</option>
+            <option value="valuta">💵 Valuta (Cambio Live)</option>
+            <option value="informatica">💻 Informatica / Dati</option>
+        </select>
+
+        <div class="input-group">
+            <label>Da</label>
+            <div class="field-container">
+                <input type="number" id="input-value" value="1" placeholder="0">
+                <select id="from-unit"></select>
+            </div>
+        </div>
+
+        <button class="swap-btn" id="swap-units">↕️</button>
+
+        <div class="input-group">
+            <label>A</label>
+            <div class="field-container">
+                <input type="number" id="output-value" readonly placeholder="0">
+                <select id="to-unit"></select>
+            </div>
+        </div>
+
+        <div class="api-status" id="status-text">Modalità Offline attiva</div>
+    </div>
+
+    <script>
+        // Configurazione delle unità di misura
+        const unitsData = {
+            lunghezza: {
+                bg: 'var(--bg-lunghezza)',
+                units: { m: 'Metri (m)', km: 'Chilometri (km)', cm: 'Centimetri (cm)', mm: 'Millimetri (mm)', inch: 'Pollici (in)', ft: 'Piedi (ft)' },
+                rates: { m: 1, km: 0.001, cm: 100, mm: 1000, inch: 39.3701, ft: 3.28084 }
+            },
+            peso: {
+                bg: 'var(--bg-peso)',
+                units: { kg: 'Chilogrammi (kg)', g: 'Grammi (g)', mg: 'Milligrammi (mg)', lb: 'Libbre (lb)', oz: 'Once (oz)' },
+                rates: { kg: 1, g: 1000, mg: 1000000, lb: 2.20462, oz: 35.274 }
+            },
+            temperatura: {
+                bg: 'var(--bg-temperatura)',
+                units: { C: 'Celsius (°C)', F: 'Fahrenheit (°F)', K: 'Kelvin (K)' }
+            },
+            valuta: {
+                bg: 'var(--bg-valuta)',
+                units: { EUR: 'Euro (€)', USD: 'Dollaro ($)', GBP: 'Sterlina (£)', JPY: 'Yen (¥)', CHF: 'Franco Svizzero' },
+                rates: { EUR: 1, USD: 1.08, GBP: 0.85, JPY: 165.0, CHF: 0.98 } // Fallback statico
+            },
+            informatica: {
+                bg: 'var(--bg-informatica)',
+                units: { B: 'Byte', KB: 'Kilobyte (KB)', MB: 'Megabyte (MB)', GB: 'Gigabyte (GB)', TB: 'Terabyte (TB)' },
+                rates: { B: 1, KB: 1/1024, MB: 1/1048576, GB: 1/1073741824, TB: 1/1099511627776 }
+            }
+        };
+
+        const categorySelect = document.getElementById('category-select');
+        const fromUnit = document.getElementById('from-unit');
+        const toUnit = document.getElementById('to-unit');
+        const inputValue = document.getElementById('input-value');
+        const outputValue = document.getElementById('output-value');
+        const swapBtn = document.getElementById('swap-units');
+        const statusText = document.getElementById('status-text');
+        const loader = document.getElementById('api-loader');
+
+        // Carica i tassi di cambio reali all'avvio per la sezione valute
+        async function fetchCurrencyRates() {
+            loader.style.display = 'inline-block';
+            statusText.innerText = "Aggiornamento valute in corso...";
+            try {
+                const res = await fetch('https://open.er-api.com/v6/latest/EUR');
+                const data = await res.json();
+                if(data && data.rates) {
+                    // Aggiorna solo le valute supportate nel nostro dizionario
+                    Object.keys(unitsData.valuta.rates).forEach(currency => {
+                        if(data.rates[currency]) {
+                            unitsData.valuta.rates[currency] = data.rates[currency];
+                        }
+                    });
+                    statusText.innerText = "Tassi di cambio aggiornati live!";
+                }
+            } catch (error) {
+                statusText.innerText = "Errore API. Uso tassi di cambio stimati.";
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        function populateUnits() {
+            const cat = categorySelect.value;
+            const data = unitsData[cat];
+            
+            // Cambia lo sfondo fluidamente
+            document.body.style.background = data.bg;
+            
+            // Pulisce i selettori precedenti
+            fromUnit.innerHTML = '';
+            toUnit.innerHTML = '';
+
+            // Riempie i selettori con le nuove opzioni
+            Object.entries(data.units).forEach(([key, name]) => {
+                fromUnit.add(new Option(name, key));
+                toUnit.add(new Option(name, key));
+            });
+
+            // Imposta due unità diverse di default se possibile
+            if (toUnit.options.length > 1) toUnit.selectedIndex = 1;
+            
+            statusText.innerText = cat === 'valuta' ? statusText.innerText : "Conversione matematica istantanea";
+            calculate();
+        }
+
+        function calculate() {
+            const cat = categorySelect.value;
+            const val = parseFloat(inputValue.value);
+            
+            if (isNaN(val)) {
+                outputValue.value = '';
+                return;
+            }
+
+            const from = fromUnit.value;
+            const to = toUnit.value;
+
+            if (from === to) {
+                outputValue.value = val;
+                return;
+            }
+
+            // Gestione speciale per le Temperature (non usano moltiplicatori lineari semplici)
+            if (cat === 'temperatura') {
+                let celsius;
+                if (from === 'C') celsius = val;
+                else if (from === 'F') celsius = (val - 32) * 5/9;
+                else if (from === 'K') celsius = val - 273.15;
+
+                let result;
+                if (to === 'C') result = celsius;
+                else if (to === 'F') result = (celsius * 9/5) + 32;
+                else if (to === 'K') result = celsius + 273.15;
+                
+                outputValue.value = Number(result.toFixed(4));
+                return;
+            }
+
+            // Calcolo standard basato su moltiplicatori (rates) per le altre categorie
+            const rates = unitsData[cat].rates;
+            // Converte l'input nell'unità di base (es. metri, kg, byte, o euro) e poi in quella finale
+            const baseValue = val / rates[from];
+            const result = baseValue * rates[to];
+
+            // Formatta il risultato in modo pulito eliminando gli zeri decimali superflui
+            outputValue.value = Number(result.toPrecision(7)).toString();
+        }
+
+        // Event Listeners
+        categorySelect.addEventListener('change', populateUnits);
+        fromUnit.addEventListener('change', calculate);
+        toUnit.addEventListener('change', calculate);
+        inputValue.addEventListener('input', calculate);
+
+        swapBtn.addEventListener('click', () => {
+            const temp = fromUnit.value;
+            fromUnit.value = toUnit.value;
+            toUnit.value = temp;
+            calculate();
+        });
+
+        // Avvio dell'applicazione
+        fetchCurrencyRates().then(() => {
+            populateUnits();
+        });
+    </script>
+</body>
+</html>
