@@ -1,0 +1,412 @@
+<!DOCTYPE html><html lang="it"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertitore Universale Premium</title>
+    <style>
+        :root {
+            /* Palette sfondi liquidi (Apple style) */
+            --bg-lunghezza: linear-gradient(135deg, #431c7a 0%, #1a1e36 50%, #0d1117 100%);
+            --bg-peso: linear-gradient(135deg, #0b4f36 0%, #0d1b1e 50%, #0a0f12 100%);
+            --bg-temperatura: linear-gradient(135deg, #7a1c1c 0%, #291515 50%, #120a0a 100%);
+            --bg-valuta: linear-gradient(135deg, #1c527a 0%, #15222e 50%, #0a0f14 100%);
+            --bg-informatica: linear-gradient(135deg, #1f2d3d 0%, #111827 50%, #030712 100%);
+            
+            /* Specularità e riflessi tipici del Liquid Glass */
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-glow: rgba(255, 255, 255, 0.15);
+            --input-bg: rgba(0, 0, 0, 0.25);
+            --text-primary: #f5f5f7;
+            --text-secondary: #86868b;
+            --accent: #2997ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-lunghezza);
+            background-size: 200% 200%;
+            transition: background 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Pannello Centrale Liquid Glass */
+        .converter-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(35px) saturate(200%);
+            -webkit-backdrop-filter: blur(35px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-border-glow); /* Riflesso di luce superiore */
+            border-radius: 32px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 400px;
+            color: var(--text-primary);
+            box-shadow: 
+                0 4px 30px rgba(0, 0, 0, 0.2),
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            animation: cardEntrance 1s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: scale(0.96) translateY(20px); filter: blur(5px); }
+            to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        }
+
+        /* Titolo Minimal */
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 32px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(180deg, #ffffff 0%, #d2d2d7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Selettore Categoria Custom */
+        .select-custom {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+            margin-bottom: 32px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            padding-right: 45px;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+        }
+        
+        .select-custom:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .select-custom option {
+            background: #1c1c1e;
+            color: var(--text-primary);
+        }
+
+        /* Gruppi di Input ben distanziati */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            padding-left: 4px;
+        }
+
+        .field-container {
+            display: flex;
+            background: var(--input-bg);
+            border-radius: 16px;
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .field-container:focus-within {
+            border-color: rgba(39, 151, 255, 0.4);
+            box-shadow: 0 0 0 3px rgba(39, 151, 255, 0.15), inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .field-container input {
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 22px;
+            font-weight: 500;
+            width: 100%;
+            padding: 8px 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* Rimuove frecce input number */
+        .field-container input::-webkit-outer-spin-button,
+        .field-container input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .field-container select {
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--accent);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: right;
+            padding-left: 10px;
+            transition: color 0.2s;
+        }
+
+        .field-container select:hover {
+            color: #64afff;
+        }
+
+        .field-container select option {
+            background: #1c1c1e;
+            color: var(--text-primary);
+        }
+
+        /* Pulsante Swap Morbido e Animato */
+        .swap-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 12px auto;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .swap-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.08) rotate(180deg);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: var(--accent);
+        }
+
+        .swap-btn:active {
+            transform: scale(0.95) rotate(180deg);
+        }
+
+        /* Loader Apple Style */
+        .loader {
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top: 2px solid var(--accent);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Status Bar Inferiore */
+        .api-status {
+            font-size: 12px;
+            font-weight: 400;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 28px;
+            letter-spacing: -0.1px;
+        }
+    </style></head><body>
+
+    <div class="converter-card">
+        <h1>Convertitore <span id="api-loader" class="loader"></span></h1>
+        
+        <select id="category-select" class="select-custom">
+            <option value="lunghezza">📏 Lunghezza</option>
+            <option value="peso">⚖️ Peso / Massa</option>
+            <option value="temperatura">🌡️ Temperatura</option>
+            <option value="valuta">💵 Valuta (Cambio Live)</option>
+            <option value="informatica">💻 Informatica / Dati</option>
+        </select>
+
+        <div class="input-group">
+            <label>Da</label>
+            <div class="field-container">
+                <input type="number" id="input-value" value="1" placeholder="0">
+                <select id="from-unit"></select>
+            </div>
+        </div>
+
+        <button class="swap-btn" id="swap-units">↕️</button>
+
+        <div class="input-group">
+            <label>A</label>
+            <div class="field-container">
+                <input type="number" id="output-value" readonly placeholder="0">
+                <select id="to-unit"></select>
+            </div>
+        </div>
+
+        <div class="api-status" id="status-text">Modalità Offline attiva</div>
+    </div>
+
+    <script>
+        const unitsData = {
+            lunghezza: {
+                bg: 'var(--bg-lunghezza)',
+                units: { m: 'Metri (m)', km: 'Chilometri (km)', cm: 'Centimetri (cm)', mm: 'Millimetri (mm)', inch: 'Pollici (in)', ft: 'Piedi (ft)' },
+                rates: { m: 1, km: 0.001, cm: 100, mm: 1000, inch: 39.3701, ft: 3.28084 }
+            },
+            peso: {
+                bg: 'var(--bg-peso)',
+                units: { kg: 'Chilogrammi (kg)', g: 'Grammi (g)', mg: 'Milligrammi (mg)', lb: 'Libbre (lb)', oz: 'Once (oz)' },
+                rates: { kg: 1, g: 1000, mg: 1000000, lb: 2.20462, oz: 35.274 }
+            },
+            temperatura: {
+                bg: 'var(--bg-temperatura)',
+                units: { C: 'Celsius (°C)', F: 'Fahrenheit (°F)', K: 'Kelvin (K)' }
+            },
+            valuta: {
+                bg: 'var(--bg-valuta)',
+                units: { EUR: 'Euro (€)', USD: 'Dollaro ($)', GBP: 'Sterlina (£)', JPY: 'Yen (¥)', CHF: 'Franco Svizzero' },
+                rates: { EUR: 1, USD: 1.08, GBP: 0.85, JPY: 165.0, CHF: 0.98 }
+            },
+            informatica: {
+                bg: 'var(--bg-informatica)',
+                units: { B: 'Byte', KB: 'Kilobyte (KB)', MB: 'Megabyte (MB)', GB: 'Gigabyte (GB)', TB: 'Terabyte (TB)' },
+                rates: { B: 1, KB: 1/1024, MB: 1/1048576, GB: 1/1073741824, TB: 1/1099511627776 }
+            }
+        };
+
+        const categorySelect = document.getElementById('category-select');
+        const fromUnit = document.getElementById('from-unit');
+        const toUnit = document.getElementById('to-unit');
+        const inputValue = document.getElementById('input-value');
+        const outputValue = document.getElementById('output-value');
+        const swapBtn = document.getElementById('swap-units');
+        const statusText = document.getElementById('status-text');
+        const loader = document.getElementById('api-loader');
+
+        async function fetchCurrencyRates() {
+            loader.style.display = 'inline-block';
+            statusText.innerText = "Aggiornamento valute...";
+            try {
+                const res = await fetch('https://open.er-api.com/v6/latest/EUR');
+                const data = await res.json();
+                if(data && data.rates) {
+                    Object.keys(unitsData.valuta.rates).forEach(currency => {
+                        if(data.rates[currency]) {
+                            unitsData.valuta.rates[currency] = data.rates[currency];
+                        }
+                    });
+                    statusText.innerText = "Tassi di cambio aggiornati live";
+                }
+            } catch (error) {
+                statusText.innerText = "Errore API. Uso tassi stimati.";
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        function populateUnits() {
+            const cat = categorySelect.value;
+            const data = unitsData[cat];
+            
+            document.body.style.background = data.bg;
+            
+            fromUnit.innerHTML = '';
+            toUnit.innerHTML = '';
+
+            Object.entries(data.units).forEach(([key, name]) => {
+                fromUnit.add(new Option(name, key));
+                toUnit.add(new Option(name, key));
+            });
+
+            if (toUnit.options.length > 1) toUnit.selectedIndex = 1;
+            
+            statusText.innerText = cat === 'valuta' ? statusText.innerText : "Conversione istantanea";
+            calculate();
+        }
+
+        function calculate() {
+            const cat = categorySelect.value;
+            const val = parseFloat(inputValue.value);
+            
+            if (isNaN(val)) {
+                outputValue.value = '';
+                return;
+            }
+
+            const from = fromUnit.value;
+            const to = toUnit.value;
+
+            if (from === to) {
+                outputValue.value = val;
+                return;
+            }
+
+            if (cat === 'temperatura') {
+                let celsius;
+                if (from === 'C') celsius = val;
+                else if (from === 'F') celsius = (val - 32) * 5/9;
+                else if (from === 'K') celsius = val - 273.15;
+
+                let result;
+                if (to === 'C') result = celsius;
+                else if (to === 'F') result = (celsius * 9/5) + 32;
+                else if (to === 'K') result = celsius + 273.15;
+                
+                outputValue.value = Number(result.toFixed(4));
+                return;
+            }
+
+            const rates = unitsData[cat].rates;
+            const baseValue = val / rates[from];
+            const result = baseValue * rates[to];
+
+            outputValue.value = Number(result.toPrecision(7)).toString();
+        }
+
+        categorySelect.addEventListener('change', populateUnits);
+        fromUnit.addEventListener('change', calculate);
+        toUnit.addEventListener('change', calculate);
+        inputValue.addEventListener('input', calculate);
+
+        swapBtn.addEventListener('click', () => {
+            const temp = fromUnit.value;
+            fromUnit.value = toUnit.value;
+            toUnit.value = temp;
+            calculate();
+        });
+
+        fetchCurrencyRates().then(() => {
+            populateUnits();
+        });
+    </script></body></html>
