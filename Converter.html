@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrystalSoft Universal Converter</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #2e1065 100%);
+            --crystal-bg: rgba(255, 255, 255, 0.03);
+            --crystal-border: rgba(255, 255, 255, 0.08);
+            --crystal-highlight: rgba(255, 255, 255, 0.2);
+            --liquid-glow: rgba(99, 102, 241, 0.15);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-gradient);
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* Ambient Liquid Glass Orbs */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+        }
+
+        body::before {
+            width: 400px;
+            height: 400px;
+            background: rgba(99, 102, 241, 0.25);
+            top: 10%;
+            left: 15%;
+            animation: float 12s infinite alternate ease-in-out;
+        }
+
+        body::after {
+            width: 350px;
+            height: 350px;
+            background: rgba(236, 72, 153, 0.2);
+            bottom: 10%;
+            right: 15%;
+            animation: float 8s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(30px) scale(1.1); }
+        }
+
+        /* CrystalSoft Container */
+        .converter-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
+            background: var(--crystal-bg);
+            backdrop-filter: blur(35px) saturate(200%);
+            -webkit-backdrop-filter: blur(35px) saturate(200%);
+            border: 1px solid var(--crystal-border);
+            border-radius: 30px;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 var(--crystal-highlight),
+                inset 0 -1px 20px rgba(255, 255, 255, 0.02);
+            margin: auto;
+        }
+
+        .converter-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+            pointer-events: none;
+        }
+
+        /* Tech Header */
+        .brand {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .brand span {
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* Form Layout */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        /* CrystalSoft Input & Select Fields */
+        select, input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--crystal-border);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        select:focus, input:focus {
+            border-color: var(--accent-color);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3), 0 0 15px var(--liquid-glow);
+        }
+
+        select option {
+            background: #1e1b4b;
+            color: var(--text-primary);
+        }
+
+        /* Results Display */
+        .result-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 18px;
+            padding: 20px;
+            margin-top: 25px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            font-weight: 300;
+            word-break: break-all;
+            text-shadow: 0 0 12px var(--accent-glow);
+            margin-bottom: 4px;
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Quick swap button */
+        .swap-container {
+            display: flex;
+            justify-content: center;
+            margin: -5px 0 15px 0;
+        }
+
+        .swap-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--crystal-border);
+            color: #a78bfa;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .swap-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="converter-container">
+        <div class="brand">CrystalSoft <span>Universal Converter</span></div>
+        
+        <div class="form-group">
+            <label for="category">Measurement Category</label>
+            <select id="category" onchange="populateUnits()">
+                <option value="length">Length & Distance</option>
+                <option value="weight">Weight & Mass</option>
+                <option value="temperature">Temperature</option>
+                <option value="area">Area</option>
+                <option value="volume">Volume</option>
+                <option value="data">Digital Data</option>
+                <option value="speed">Speed</option>
+                <option value="time">Time</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="input-value">Enter Value</label>
+            <input type="number" id="input-value" value="1" oninput="performConversion()">
+        </div>
+
+        <div class="form-group">
+            <label for="from-unit">From</label>
+            <select id="from-unit" onchange="performConversion()"></select>
+        </div>
+
+        <div class="swap-container">
+            <button class="swap-btn" onclick="swapUnits()" title="Swap Units">⇄</button>
+        </div>
+
+        <div class="form-group">
+            <label for="to-unit">To</label>
+            <select id="to-unit" onchange="performConversion()"></select>
+        </div>
+
+        <div class="result-box">
+            <div class="result-value" id="output-value">0</div>
+            <div class="result-label" id="output-label">Result</div>
+        </div>
+    </div>
+
+    <script>
+        const unitData = {
+            length: {
+                units: {
+                    meters: { name: "Meters (m)", factor: 1 },
+                    kilometers: { name: "Kilometers (km)", factor: 1000 },
+                    centimeters: { name: "Centimeters (cm)", factor: 0.01 },
+                    millimeters: { name: "Millimeters (mm)", factor: 0.001 },
+                    miles: { name: "Miles (mi)", factor: 1609.344 },
+                    yards: { name: "Yards (yd)", factor: 0.9144 },
+                    feet: { name: "Feet (ft)", factor: 0.3048 },
+                    inches: { name: "Inches (in)", factor: 0.0254 }
+                }
+            },
+            weight: {
+                units: {
+                    kilograms: { name: "Kilograms (kg)", factor: 1 },
+                    grams: { name: "Grams (g)", factor: 0.001 },
+                    milligrams: { name: "Milligrams (mg)", factor: 0.000001 },
+                    pounds: { name: "Pounds (lb)", factor: 0.45359237 },
+                    ounces: { name: "Ounces (oz)", factor: 0.028349523 },
+                    stones: { name: "Stones (st)", factor: 6.35029318 }
+                }
+            },
+            temperature: {
+                isSpecial: true,
+                units: {
+                    celsius: { name: "Celsius (°C)" },
+                    fahrenheit: { name: "Fahrenheit (°F)" },
+                    kelvin: { name: "Kelvin (K)" }
+                },
+                convert: function(value, from, to) {
+                    let c;
+                    if (from === 'celsius') c = value;
+                    else if (from === 'fahrenheit') c = (value - 32) * 5 / 9;
+                    else if (from === 'kelvin') c = value - 273.15;
+
+                    if (to === 'celsius') return c;
+                    else if (to === 'fahrenheit') return (c * 9 / 5) + 32;
+                    else if (to === 'kelvin') return c + 273.15;
+                }
+            },
+            area: {
+                units: {
+                    square_meters: { name: "Square Meters (m²)", factor: 1 },
+                    square_kilometers: { name: "Square Kilometers (km²)", factor: 1000000 },
+                    square_miles: { name: "Square Miles (mi²)", factor: 2589988.11 },
+                    acres: { name: "Acres (ac)", factor: 4046.85642 },
+                    hectares: { name: "Hectares (ha)", factor: 10000 },
+                    square_feet: { name: "Square Feet (ft²)", factor: 0.09290304 }
+                }
+            },
+            volume: {
+                units: {
+                    liters: { name: "Liters (L)", factor: 1 },
+                    milliliters: { name: "Milliliters (mL)", factor: 0.001 },
+                    cubic_meters: { name: "Cubic Meters (m³)", factor: 1000 },
+                    gallons: { name: "Gallons (US gal)", factor: 3.78541 },
+                    quarts: { name: "Quarts (US qt)", factor: 0.946353 },
+                    cups: { name: "Cups (US cup)", factor: 0.236588 },
+                    fluid_ounces: { name: "Fluid Ounces (US fl oz)", factor: 0.0295735 }
+                }
+            },
+            data: {
+                units: {
+                    bytes: { name: "Bytes (B)", factor: 1 },
+                    kilobytes: { name: "Kilobytes (KB)", factor: 1024 },
+                    megabytes: { name: "Megabytes (MB)", factor: 1024**2 },
+                    gigabytes: { name: "Gigabytes (GB)", factor: 1024**3 },
+                    terabytes: { name: "Terabytes (TB)", factor: 1024**4 }
+                }
+            },
+            speed: {
+                units: {
+                    meters_per_second: { name: "Meters/Second (m/s)", factor: 1 },
+                    kilometers_per_hour: { name: "Kilometers/Hour (km/h)", factor: 1 / 3.6 },
+                    miles_per_hour: { name: "Miles/Hour (mph)", factor: 0.44704 },
+                    knots: { name: "Knots (kt)", factor: 0.514444 }
+                }
+            },
+            time: {
+                units: {
+                    seconds: { name: "Seconds (s)", factor: 1 },
+                    minutes: { name: "Minutes (min)", factor: 60 },
+                    hours: { name: "Hours (h)", factor: 3600 },
+                    days: { name: "Days (d)", factor: 86400 },
+                    weeks: { name: "Weeks (w)", factor: 604800 },
+                    years: { name: "Years (yr - 365 days)", factor: 31536000 }
+                }
+            }
+        };
+
+        const categorySelect = document.getElementById('category');
+        const fromUnitSelect = document.getElementById('from-unit');
+        const toUnitSelect = document.getElementById('to-unit');
+        const inputValueInput = document.getElementById('input-value');
+        const outputValueDisplay = document.getElementById('output-value');
+        const outputLabelDisplay = document.getElementById('output-label');
+
+        function populateUnits() {
+            const category = categorySelect.value;
+            const unitsObj = unitData[category].units;
+            
+            fromUnitSelect.innerHTML = '';
+            toUnitSelect.innerHTML = '';
+
+            Object.keys(unitsObj).forEach((key) => {
+                let opt1 = document.createElement('option');
+                opt1.value = key;
+                opt1.textContent = unitsObj[key].name;
+                fromUnitSelect.appendChild(opt1);
+
+                let opt2 = document.createElement('option');
+                opt2.value = key;
+                opt2.textContent = unitsObj[key].name;
+                toUnitSelect.appendChild(opt2);
+            });
+
+            if(toUnitSelect.options.length > 1) {
+                toUnitSelect.selectedIndex = 1;
+            }
+
+            performConversion();
+        }
+
+        function swapUnits() {
+            const temp = fromUnitSelect.selectedIndex;
+            fromUnitSelect.selectedIndex = toUnitSelect.selectedIndex;
+            toUnitSelect.selectedIndex = temp;
+            performConversion();
+        }
+
+        function performConversion() {
+            const category = categorySelect.value;
+            const value = parseFloat(inputValueInput.value);
+            
+            if (isNaN(value)) {
+                outputValueDisplay.innerText = "0";
+                outputLabelDisplay.innerText = "Please enter a valid number";
+                return;
+            }
+
+            const fromUnit = fromUnitSelect.value;
+            const toUnit = toUnitSelect.value;
+            
+            if(!fromUnit || !toUnit) return;
+
+            let result;
+            const catConfig = unitData[category];
+
+            if (catConfig.isSpecial) {
+                result = catConfig.convert(value, fromUnit, toUnit);
+            } else {
+                const fromFactor = catConfig.units[fromUnit].factor;
+                const toFactor = catConfig.units[toUnit].factor;
+                result = value * (fromFactor / toFactor);
+            }
+
+            let formattedResult = Number(result.toPrecision(12)).toString();
+            if (formattedResult.includes('e')) {
+                formattedResult = result.toExponential(4);
+            } else if (formattedResult.indexOf('.') !== -1) {
+                formattedResult = parseFloat(result.toFixed(6)).toString();
+            }
+
+            const targetName = catConfig.units[toUnit].name;
+            
+            outputValueDisplay.innerText = formattedResult;
+            outputLabelDisplay.innerText = `Converted into ${targetName}`;
+        }
+
+        populateUnits();
+    </script>
+</body>
+</html>
