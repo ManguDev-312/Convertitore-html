@@ -1,4 +1,4 @@
-Convertitore HTML
+Convertitore HTML (v.1.0.0)
 
 Questo è un semplice ma potente convertitore HTML progettato per funzionare in locale.  
 Il progetto nasce da un’idea personale ed è stato sviluppato con il supporto di un modello di intelligenza artificiale.
