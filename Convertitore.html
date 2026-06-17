@@ -1,25 +1,32 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
+<!DOCTYPE html><html lang="it"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Convertitore Universale Premium</title>
     <style>
         :root {
-            --bg-lunghezza: linear-gradient(135deg, #667eea, #764ba2);
-            --bg-peso: linear-gradient(135deg, #11998e, #38ef7d);
-            --bg-temperatura: linear-gradient(135deg, #f12711, #f5af19);
-            --bg-valuta: linear-gradient(135deg, #0575e6, #00f260);
-            --bg-informatica: linear-gradient(135deg, #141e30, #243b55);
-            --glass: rgba(255, 255, 255, 0.15);
-            --text: #ffffff;
+            /* Palette sfondi liquidi (Apple style) */
+            --bg-lunghezza: linear-gradient(135deg, #431c7a 0%, #1a1e36 50%, #0d1117 100%);
+            --bg-peso: linear-gradient(135deg, #0b4f36 0%, #0d1b1e 50%, #0a0f12 100%);
+            --bg-temperatura: linear-gradient(135deg, #7a1c1c 0%, #291515 50%, #120a0a 100%);
+            --bg-valuta: linear-gradient(135deg, #1c527a 0%, #15222e 50%, #0a0f14 100%);
+            --bg-informatica: linear-gradient(135deg, #1f2d3d 0%, #111827 50%, #030712 100%);
+            
+            /* Specularità e riflessi tipici del Liquid Glass */
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-glow: rgba(255, 255, 255, 0.15);
+            --input-bg: rgba(0, 0, 0, 0.25);
+            --text-primary: #f5f5f7;
+            --text-secondary: #86868b;
+            --accent: #2997ff;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
@@ -28,130 +35,197 @@
             justify-content: center;
             align-items: center;
             background: var(--bg-lunghezza);
-            transition: background 0.8s ease;
-            padding: 10px;
-            overflow: hidden;
+            background-size: 200% 200%;
+            transition: background 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+            padding: 20px;
+            overflow-x: hidden;
         }
 
+        /* Pannello Centrale Liquid Glass */
         .converter-card {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 24px;
-            padding: 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(35px) saturate(200%);
+            -webkit-backdrop-filter: blur(35px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-border-glow); /* Riflesso di luce superiore */
+            border-radius: 32px;
+            padding: 40px 30px;
             width: 100%;
-            max-width: 360px;
-            color: var(--text);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            animation: fadeIn 0.8s ease-out;
+            max-width: 400px;
+            color: var(--text-primary);
+            box-shadow: 
+                0 4px 30px rgba(0, 0, 0, 0.2),
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            animation: cardEntrance 1s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: scale(0.96) translateY(20px); filter: blur(5px); }
+            to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
         }
 
-        h2 {
-            font-size: 20px;
-            text-align: center;
-            margin-bottom: 20px;
+        /* Titolo Minimal */
+        h1 {
+            font-size: 24px;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            text-align: center;
+            margin-bottom: 32px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(180deg, #ffffff 0%, #d2d2d7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
 
+        /* Selettore Categoria Custom */
         .select-custom {
             width: 100%;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: var(--text);
-            font-size: 15px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 500;
             outline: none;
             cursor: pointer;
-            margin-bottom: 20px;
-            transition: background 0.3s;
+            margin-bottom: 32px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            padding-right: 45px;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
         }
         
-        .select-custom option {
-            background: #243b55;
-            color: #fff;
+        .select-custom:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
+        .select-custom option {
+            background: #1c1c1e;
+            color: var(--text-primary);
+        }
+
+        /* Gruppi di Input ben distanziati */
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .input-group label {
             display: block;
-            font-size: 11px;
+            font-size: 12px;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-            opacity: 0.8;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            padding-left: 4px;
         }
 
         .field-container {
             display: flex;
-            background: rgba(0, 0, 0, 0.15);
-            border-radius: 12px;
-            padding: 5px 10px;
-            border: 1px solid rgba(255,255,255,0.05);
+            background: var(--input-bg);
+            border-radius: 16px;
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
             align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .field-container:focus-within {
+            border-color: rgba(39, 151, 255, 0.4);
+            box-shadow: 0 0 0 3px rgba(39, 151, 255, 0.15), inset 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .field-container input {
             background: none;
             border: none;
             outline: none;
-            color: var(--text);
-            font-size: 18px;
-            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 22px;
+            font-weight: 500;
             width: 100%;
-            padding: 8px 5px;
+            padding: 8px 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* Rimuove frecce input number */
+        .field-container input::-webkit-outer-spin-button,
+        .field-container input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         .field-container select {
             background: none;
             border: none;
             outline: none;
-            color: var(--text);
-            font-size: 14px;
+            color: var(--accent);
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             text-align: right;
+            padding-left: 10px;
+            transition: color 0.2s;
+        }
+
+        .field-container select:hover {
+            color: #64afff;
         }
 
         .field-container select option {
-            background: #243b55;
+            background: #1c1c1e;
+            color: var(--text-primary);
         }
 
+        /* Pulsante Swap Morbido e Animato */
         .swap-btn {
-            display: block;
-            margin: 10px auto;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            width: 32px;
-            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 12px auto;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 14px;
-            transition: transform 0.3s;
+            font-size: 16px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .swap-btn:active { transform: scale(0.9) rotate(180deg); }
 
+        .swap-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.08) rotate(180deg);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: var(--accent);
+        }
+
+        .swap-btn:active {
+            transform: scale(0.95) rotate(180deg);
+        }
+
+        /* Loader Apple Style */
         .loader {
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid #fff;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top: 2px solid var(--accent);
             border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-left: 10px;
-            vertical-align: middle;
+            width: 18px;
+            height: 18px;
+            animation: spin 0.8s linear infinite;
             display: none;
         }
 
@@ -160,18 +234,19 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Status Bar Inferiore */
         .api-status {
-            font-size: 10px;
+            font-size: 12px;
+            font-weight: 400;
             text-align: center;
-            opacity: 0.6;
-            margin-top: 15px;
+            color: var(--text-secondary);
+            margin-top: 28px;
+            letter-spacing: -0.1px;
         }
-    </style>
-</head>
-<body>
+    </style></head><body>
 
     <div class="converter-card">
-        <h2>Convertitore Universale <span id="api-loader" class="loader"></span></h2>
+        <h1>Convertitore <span id="api-loader" class="loader"></span></h1>
         
         <select id="category-select" class="select-custom">
             <option value="lunghezza">📏 Lunghezza</option>
@@ -203,7 +278,6 @@
     </div>
 
     <script>
-        // Configurazione delle unità di misura
         const unitsData = {
             lunghezza: {
                 bg: 'var(--bg-lunghezza)',
@@ -222,7 +296,7 @@
             valuta: {
                 bg: 'var(--bg-valuta)',
                 units: { EUR: 'Euro (€)', USD: 'Dollaro ($)', GBP: 'Sterlina (£)', JPY: 'Yen (¥)', CHF: 'Franco Svizzero' },
-                rates: { EUR: 1, USD: 1.08, GBP: 0.85, JPY: 165.0, CHF: 0.98 } // Fallback statico
+                rates: { EUR: 1, USD: 1.08, GBP: 0.85, JPY: 165.0, CHF: 0.98 }
             },
             informatica: {
                 bg: 'var(--bg-informatica)',
@@ -240,24 +314,22 @@
         const statusText = document.getElementById('status-text');
         const loader = document.getElementById('api-loader');
 
-        // Carica i tassi di cambio reali all'avvio per la sezione valute
         async function fetchCurrencyRates() {
             loader.style.display = 'inline-block';
-            statusText.innerText = "Aggiornamento valute in corso...";
+            statusText.innerText = "Aggiornamento valute...";
             try {
                 const res = await fetch('https://open.er-api.com/v6/latest/EUR');
                 const data = await res.json();
                 if(data && data.rates) {
-                    // Aggiorna solo le valute supportate nel nostro dizionario
                     Object.keys(unitsData.valuta.rates).forEach(currency => {
                         if(data.rates[currency]) {
                             unitsData.valuta.rates[currency] = data.rates[currency];
                         }
                     });
-                    statusText.innerText = "Tassi di cambio aggiornati live!";
+                    statusText.innerText = "Tassi di cambio aggiornati live";
                 }
             } catch (error) {
-                statusText.innerText = "Errore API. Uso tassi di cambio stimati.";
+                statusText.innerText = "Errore API. Uso tassi stimati.";
             } finally {
                 loader.style.display = 'none';
             }
@@ -267,23 +339,19 @@
             const cat = categorySelect.value;
             const data = unitsData[cat];
             
-            // Cambia lo sfondo fluidamente
             document.body.style.background = data.bg;
             
-            // Pulisce i selettori precedenti
             fromUnit.innerHTML = '';
             toUnit.innerHTML = '';
 
-            // Riempie i selettori con le nuove opzioni
             Object.entries(data.units).forEach(([key, name]) => {
                 fromUnit.add(new Option(name, key));
                 toUnit.add(new Option(name, key));
             });
 
-            // Imposta due unità diverse di default se possibile
             if (toUnit.options.length > 1) toUnit.selectedIndex = 1;
             
-            statusText.innerText = cat === 'valuta' ? statusText.innerText : "Conversione matematica istantanea";
+            statusText.innerText = cat === 'valuta' ? statusText.innerText : "Conversione istantanea";
             calculate();
         }
 
@@ -304,7 +372,6 @@
                 return;
             }
 
-            // Gestione speciale per le Temperature (non usano moltiplicatori lineari semplici)
             if (cat === 'temperatura') {
                 let celsius;
                 if (from === 'C') celsius = val;
@@ -320,17 +387,13 @@
                 return;
             }
 
-            // Calcolo standard basato su moltiplicatori (rates) per le altre categorie
             const rates = unitsData[cat].rates;
-            // Converte l'input nell'unità di base (es. metri, kg, byte, o euro) e poi in quella finale
             const baseValue = val / rates[from];
             const result = baseValue * rates[to];
 
-            // Formatta il risultato in modo pulito eliminando gli zeri decimali superflui
             outputValue.value = Number(result.toPrecision(7)).toString();
         }
 
-        // Event Listeners
         categorySelect.addEventListener('change', populateUnits);
         fromUnit.addEventListener('change', calculate);
         toUnit.addEventListener('change', calculate);
@@ -343,10 +406,7 @@
             calculate();
         });
 
-        // Avvio dell'applicazione
         fetchCurrencyRates().then(() => {
             populateUnits();
         });
-    </script>
-</body>
-</html>
+    </script></body></html>
