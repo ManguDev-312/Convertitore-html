@@ -1,33 +1,41 @@
-# HTML Converter
+Converter
+Converter is a powerful unit converter, designed to be extremely versatile, intuitive, and modern. Whether you need to convert length, weight, temperature, or any other existing unit of measurement, Converter does it quickly and with a refined aesthetic.
 
-Current Version: v2.0.0
+Its most impressive feature? It's so lightweight and flexible that you can literally run it anywhere, even within Windows Notepad or TextEdit on macOS!
 
-## Description
-A lightweight HTML converter built as a single-file application.  
-The interface is designed using CrystalSoft Framework™, providing a clean, modern and responsive visual experience.
+Key Features
+Universal: Supports virtually any existing unit of measurement.
 
-## Versions
+Aesthetic and Modern: A refined, clean, and pleasant-to-use visual interface.
 
-### v2.0.0 – Major Update
-- Complete UI redesign using CrystalSoft Framework™
-- Improved layout consistency and spacing
-- Cleaner and more readable code structure
-- Enhanced responsiveness and visual clarity
-- Updated animations and transitions
-- General performance improvements
+Intuitive: No complicated setup; just enter your data and convert instantly.
 
-### v1.1.0 – Second Version
-- Updated UI with improved transparency effects
-- Better code readability
-- More modern and uniform interface
-- Minor optimizations
+Super Versatile: It even works in native text editors like Windows Notes and Mac TextEdit.
 
-### v1.0.0 – Initial Release
-- Basic converter functionality
-- First stable version
+Technologies Used
+To keep the project lightweight, responsive, and compatible with any system, it was developed entirely in:
 
-## Project History
-This project was started in 2026 and is maintained with regular updates.
+HTML (and the magic of its versatility!)
 
-## License
-Released under the MIT License. See the LICENSE file for details.
+How to Install and Run
+Using Converter is very simple:
+
+Download the project files to your computer.
+
+Open the main file with your favorite web browser (Chrome, Safari, Edge, Firefox).
+
+To run it in Windows Notes or Mac TextEdit, simply drag the file into the application or open it directly from there.
+
+How to Contribute
+The project is open to contributions from everyone! If you want to add new units of measurement, improve the aesthetics, or optimize the code, you're welcome.
+
+To Contribute:
+
+Fork this project.
+
+Create a branch for your changes.
+
+Submit a Pull Request explaining your improvements.
+
+License
+This project is released under the MIT License. This means you are free to use, modify, and distribute it as you wish, as long as you retain the original copyright.
